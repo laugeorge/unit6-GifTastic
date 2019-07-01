@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Animal Buttons</title>
+</head>
+
+<body>
+
+<div class = "container">
+
+<div id="buttons-view"></div>
+
+<!--
+  <button simpsons="Homer Simpsons">Homer</button>
+  <button simpsons="Marge Simpsons">Marge</button>
+  <button simpsons="Bart Simpsons">Bart</button>
+  <button simpsons="Lisa Simpsons">Lisa</button>
+  <button simpsons="Maggie Simpsons">Maggie</button>
+-->
+<br>
+
+<form id="simpsons-form">
+    <label for="character-input">Doh! Add your favorite character</label>
+    <input type="text" id="character-input">
+    <input id="add-character" type="submit" value="Add a character">
+</form>
+
+<div id="buttons-view"></div>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    
+    var simpsons = ["Homer", "Marge", "Bart", "Lisa", "Maggie"];
+
+
+    // Adding click event listen listener to all buttons
+    //$("button").on("click", function() {
+      // Grabbing and storing the simspons property value from the button
+      //var animal = $(this).attr("simpsons");
+
+    function displaygif(){
+      // Constructing a queryURL using the animal name
+      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        movie + "&api_key=bGEp7muCJDIkH6B5Ulq1YKjhTasK4Qg6&limit=10";
+
+      // Performing an AJAX request with the queryURL
+      $.ajax({
+        url: queryURL,
+        method: "GET"
+      })
+        // After data comes back from the request
+        .then(function(response) {
+          console.log(queryURL);
+
+          console.log(response);
+          // storing the data from the AJAX request in the results variable
+          var results = response.data;
+
+          // Looping through each result item
+          for (var i = 0; i < results.length; i++) {
+
+            // Creating and storing a div tag
+            var animalDiv = $("<div>");
+
+            // Creating a paragraph tag with the result item's rating
+            var p = $("<p>").text("Rating: " + results[i].rating);
+
+            // Creating and storing an image tag
+            var animalImage = $("<img>");
+            // Setting the src attribute of the image to a property pulled off the result item
+            animalImage.attr("src", results[i].images.fixed_height.url);
+
+            // Appending the paragraph and image tag to the animalDiv
+            animalDiv.append(p);
+            animalDiv.append(animalImage);
+
+            // Prependng the animalDiv to the HTML page in the "#gifs-appear-here" div
+            $("#buttons-view").prepend(animalDiv);
+          }
+        });
+    };
+
+    //Function for displaying movie data
+    function renderButtons (){
+
+        $("#buttons-view").empty();
+
+        for (var i = 0; i < simpsons.length; i++){
+            var a = $("<button>");
+            a.addClass("movie-btn");
+            a.attr("data-name", simpsons[i]);
+            a.text(simpsons[i]);
+            $("buttons-view").append(a);
+        }
+    }
+
+    //Function for when the character button is clicked
+    $("#add-character").on("click", function(event) {
+        //.preventDefault Prevents the browsers default behaviour (such as opening a link), 
+        // but does not stop the event from bubbling up the DOM.
+        event.preventDefault();
+
+        var movie = $("#character-input").val().trim();
+
+        simpsons.push(movie);
+
+        renderButtons();
+
+    });
+
+    $(document).on("click", ".movie-btn", displayMovieINfo);
+
+    renderButtons();
+
+  </script>
+  </div>
+</body>
+
+</html>
